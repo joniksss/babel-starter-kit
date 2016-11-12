@@ -43,6 +43,20 @@ app.get('/task2b', (req, res) => {
   res.send(result);
 });
 
+app.get('/task2c', (req, res) => {
+  const { username } = req.query;
+  const noEmpty = username !== '';
+  const noUndefined = username !== undefined;
+  const re = new RegExp('@?(https?:)?(//)?(([a-zA-Z0-9.]*)[^/]*/)?([a-zA-Z0-9.]*)', 'i');
+  let result;
+  if (noEmpty && noUndefined) {
+    result = `@${username.match(re)[5]}`;
+  } else {
+    result = 'Invalid username';
+  }
+  res.send(result);
+});
+
 
 app.listen(3000, () => {
   console.log('Your app listening on port 3000!');
