@@ -15,6 +15,13 @@ app.get('/task2a', (req, res) => {
   res.send(sum.toString());
 });
 
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+String.prototype.capitalizeFirstLetter = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 app.get('/task2b', (req, res) => {
   let fullName = req.query.fullname;
   const noNumber = !/\d/.test(fullName);
@@ -26,14 +33,14 @@ app.get('/task2b', (req, res) => {
   console.log(fullName);
   let result;
   if (noNumber && noEmpty && noUndefined && noSub && noSlash) {
-    fullName = fullName.trim();
+    fullName = fullName.trim().replace(/\s\s+/g, ' ');
     const parts = fullName.split(' ');
     if (parts.length === 1) {
-      result = `${parts[0]}`;
+      result = `${parts[0].trim().toLowerCase().capitalizeFirstLetter()}`;
     } else if (parts.length === 2) {
-      result = `${parts[1]} ${parts[0].split('')[0]}.`;
+      result = `${parts[1].trim().toLowerCase().capitalizeFirstLetter()} ${parts[0].trim().split('')[0].capitalizeFirstLetter()}.`;
     } else if (parts.length === 3) {
-      result = `${parts[2]} ${parts[0].split('')[0]}. ${parts[1].split('')[0]}.`;
+      result = `${parts[2].trim().toLowerCase().capitalizeFirstLetter()} ${parts[0].trim().split('')[0].capitalizeFirstLetter()}. ${parts[1].trim().split('')[0].capitalizeFirstLetter()}.`;
     } else {
       result = 'Invalid fullname';
     }
