@@ -16,10 +16,10 @@ app.get('/task2a', (req, res) => {
 });
 
 function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 String.prototype.capitalizeFirstLetter = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
+  return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
 app.get('/task2b', (req, res) => {
@@ -51,7 +51,9 @@ app.get('/task2b', (req, res) => {
 });
 
 app.get('/task2c', (req, res) => {
-  const { username } = req.query;
+  const {
+    username
+  } = req.query;
   const noEmpty = username !== '';
   const noUndefined = username !== undefined;
   const re = new RegExp('@?(https?:)?(//)?(([a-zA-Z0-9.]*)[^/]*/)?@?([a-zA-Z0-9_.]*)(/.*)?', 'i');
@@ -60,6 +62,85 @@ app.get('/task2c', (req, res) => {
     result = `@${username.match(re)[5]}`;
   } else {
     result = 'Invalid username';
+  }
+  res.send(result);
+});
+
+function hslToRgb(h, s, l) {
+  var r, g, b;
+
+  if (s == 0) {
+    r = g = b = l; // achromatic
+  } else {
+    var hue2rgb = function hue2rgb(p, q, t) {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    }
+
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    var p = 2 * l - q;
+    r = hue2rgb(p, q, h + 1 / 3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1 / 3);
+  }
+
+  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+
+app.get('/task2d', (req, res) => {
+  let {
+    color
+  } = req.query;
+  console.log(color);
+
+  const noEmpty = color !== '';
+  const noUndefined = color !== undefined;
+
+  let result;
+  if (noEmpty && noUndefined) {
+
+    color = color.toLowerCase().trim().replace(/ +/g, '').replace(/%20/g, '');
+    console.log(color);
+    const matchHex = color.match(/^#?(([0-9a-f]{3})([0-9a-f]{3})?$)/i);
+    const matchRgba = color.match(/^rgba?\((\d+),(\d+),(\d+)(,(\.\d+))?\)/i);
+    const matchHsl = color.match(/^hsl\((\d+),(\d+)%,(\d+)%\)/i);
+    if (matchHex !== null) {
+      if (matchHex[3]) {
+        result = '#' + matchHex[1];
+        console.log('Hex');
+      } else {
+        const tmp = matchHex[1]
+        result = '#' + tmp[0] + tmp[0] + tmp[1] + tmp[1] + tmp[2] + tmp[2];
+        console.log('short Hex');
+      }
+    } else if (matchRgba !== null && parseInt(matchRgba[1], 10) < 256 && parseInt(matchRgba[2], 10) < 256 && parseInt(matchRgba[3], 10) < 256) {
+      if (matchRgba[4] === undefined) {
+        console.log('rgb');
+        result = "#" +
+          ("0" + parseInt(matchRgba[1], 10).toString(16)).slice(-2) +
+          ("0" + parseInt(matchRgba[2], 10).toString(16)).slice(-2) +
+          ("0" + parseInt(matchRgba[3], 10).toString(16)).slice(-2);
+
+      } else {
+        res.send('Invalid color');
+      }
+    } else if (matchHsl !== null && parseInt(matchHsl[1]) < 361 && parseInt(matchHsl[2]) < 101 && parseInt(matchHsl[3]) < 101) {
+      let rgb = hslToRgb(parseInt(matchHsl[1], 10) / 360, parseInt(matchHsl[2], 10) / 100, parseInt(matchHsl[3], 10) / 100);
+      result = "#" +
+        ("0" + Math.round(rgb[0]).toString(16)).slice(-2) +
+        ("0" + Math.round(rgb[1]).toString(16)).slice(-2) +
+        ("0" + Math.round(rgb[2]).toString(16)).slice(-2);
+
+    } else {
+      res.send('Invalid color');
+    }
+
+  } else {
+    result = 'Invalid color';
   }
   res.send(result);
 });
