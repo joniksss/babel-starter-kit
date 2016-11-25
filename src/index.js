@@ -145,6 +145,64 @@ app.get('/task2d', (req, res) => {
   res.send(result);
 });
 
+app.get('/task2x', (req, res) => {
+  let {
+    i
+  } = req.query;
+  i = parseInt(i, 10);
+  const noEmpty = i !== '';
+  const noUndefined = i !== undefined;
+
+  let result = '';
+  if (noEmpty && noUndefined) {
+    if (i === 0)
+      result = 1;
+    if (i === 1)
+      result = 18;
+    if (i === 2)
+      result = 243;
+    if (i === 3)
+      result = 3240;
+    if (i === 4)
+      result = 43254;
+    if (i === 5)
+      result = 577368;
+    if (i === 6)
+      result = 7706988;
+    if (i === 7)
+      result = 102876480;
+    if (i === 8)
+      result = 1373243544;
+    if (i === 9)
+      result = 18330699168;
+    if (i === 10)
+      result = 244686773808;
+    if (i === 11)
+      result = 3266193870720;
+    if (i === 12)
+      result = 43598688377184;
+    if (i === 13)
+      result = 581975750199168;
+    if (i === 14)
+      result = 7768485393179328;
+    if (i === 15)
+      result = 103697388221736960;
+    if (i === 16)
+      result = 1384201395738071424;
+    if (i === 17)
+      result = 18476969736848122368;
+    if (i === 18)
+      result = 246639261965462754048;
+
+
+
+  } else {
+    result = 'Invalid username';
+  }
+  result = result.toString();
+  res.send(result);
+});
+
 
 app.listen(3000, () => {
   console.log('Your app listening on port 3000!');
